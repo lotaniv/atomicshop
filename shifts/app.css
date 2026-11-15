@@ -231,3 +231,79 @@ h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: v
 
 @keyframes up { from { transform: translateY(100%); } to { transform: none; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Tabs ---------- */
+.icon-row { display: flex; gap: 8px; }
+.seg { display: flex; gap: 4px; padding: 4px; background: var(--card-2); border-radius: 14px; margin: 0 0 14px; }
+.seg-btn { flex: 1; padding: 9px 6px; border-radius: 11px; font-weight: 650; font-size: 15px; color: var(--muted); line-height: 1.2; }
+.seg-btn small { display: block; font-size: 11px; font-weight: 600; opacity: .8; margin-top: 2px; font-variant-numeric: tabular-nums; }
+.seg-btn.on { background: var(--card); color: var(--text); box-shadow: var(--shadow); }
+.seg-btn.on.bad { color: var(--warn); }
+.seg.small { margin: 0; }
+
+/* ---------- Report cards ---------- */
+.card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; margin-bottom: 12px; }
+.card-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 750; font-size: 17px; margin-bottom: 6px; }
+.card-h .count { font-size: 13px; font-weight: 650; color: var(--muted); font-variant-numeric: tabular-nums; display: inline-flex; align-items: center; gap: 6px; }
+.card-h .count.full { color: var(--done); }
+.card-hint { color: var(--muted); font-size: 13px; margin: -2px 0 8px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fld { display: block; margin-top: 4px; }
+.fld.wide { margin-top: 10px; }
+.fld span { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin: 0 2px 4px; }
+.fld input, .ta {
+  width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 12px;
+  background: var(--card-2); font-size: 16px; outline: none;
+}
+.fld input:focus, .ta:focus, .tin:focus { border-color: var(--accent); }
+.ta { min-height: 90px; resize: vertical; }
+
+.crow { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+.card-h + .crow, .card-hint + .crow { border-top: 0; }
+.clabel { flex: 1; min-width: 0; font-weight: 600; font-size: 15px; }
+.cact { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.dbl { display: flex; align-items: center; gap: 6px; }
+.slot-l { font-size: 12px; color: var(--muted); font-weight: 600; }
+.mini {
+  height: 36px; padding: 0 14px; border-radius: 10px; font-weight: 700; font-size: 14px;
+  background: var(--card-2); display: inline-flex; align-items: center; white-space: nowrap; max-width: 160px; overflow: hidden; text-overflow: ellipsis;
+}
+.mini.ok { color: var(--done); background: var(--done-soft); }
+.mini.bad { color: var(--warn); background: var(--warn-soft); }
+.mini.go { color: #fff; background: var(--accent); }
+.mini.ok.on { background: var(--done); color: #fff; }
+.mini.bad.on { background: var(--warn); color: #fff; }
+.mini:active, .qchip:active, .cchip:active { opacity: .8; }
+.cchip {
+  min-height: 36px; padding: 6px 12px; border-radius: 10px; font-weight: 650; font-size: 14px; font-variant-numeric: tabular-nums;
+  text-align: right; max-width: 200px;
+}
+.cchip.ok { background: var(--done-soft); color: var(--done); }
+.cchip.bad { background: var(--warn-soft); color: var(--warn); }
+.file-btn { cursor: pointer; }
+label.btn.file-btn { margin-top: 16px; width: 100%; }
+.link-btn { width: 100%; margin: 0 0 12px; color: var(--accent); }
+a.btn { text-decoration: none; }
+
+/* ---------- Fridges ---------- */
+.frow { display: flex; align-items: center; gap: 10px; padding: 10px 0 4px; border-top: 1px solid var(--line); }
+.card-h + .frow { border-top: 0; }
+.frow.fixed { padding-bottom: 10px; }
+.fno { min-width: 40px; height: 32px; padding: 0 6px; border-radius: 9px; background: var(--accent-soft); color: var(--accent); font-weight: 750; font-size: 13px; display: grid; place-items: center; flex: none; }
+.fname { flex: 1; min-width: 0; font-weight: 650; font-size: 15px; }
+.fsub { font-size: 12px; color: var(--muted); font-weight: 500; }
+.fin { display: flex; align-items: center; gap: 6px; flex: none; }
+.pm { width: 36px; height: 44px; border-radius: 10px; background: var(--card-2); font-weight: 800; font-size: 18px; color: var(--muted); }
+.tin {
+  width: 92px; height: 44px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--card-2);
+  font-size: 18px; font-weight: 700; text-align: center; direction: ltr; outline: none; font-variant-numeric: tabular-nums;
+}
+.tin::placeholder { color: var(--muted); opacity: .45; font-weight: 500; }
+.fval-fixed { font-weight: 750; color: var(--muted); padding: 0 8px; }
+.fquick { display: flex; gap: 6px; padding: 0 50px 10px 0; flex-wrap: wrap; }
+.qchip { font-size: 12px; font-weight: 650; padding: 4px 10px; border-radius: 999px; background: var(--card-2); color: var(--muted); }
+.qchip.on { background: var(--accent); color: #fff; }
+.tsm { border: 1.5px solid var(--line); border-radius: 9px; background: var(--card-2); padding: 3px 6px; font-size: 14px; font-weight: 700; }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.sheet .row.col { flex-direction: column; }
+.sheet .row.col .btn { flex: none; width: 100%; }
