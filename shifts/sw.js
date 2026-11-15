@@ -1,5 +1,5 @@
 // Offline cache. Bump VERSION when files change.
-const VERSION = "shifts-v2";
+const VERSION = "shifts-v3";
 const FILES = ["./", "index.html", "app.css", "app.js", "tasks.js", "reports.js", "jszip.min.js", "manifest.webmanifest", "apple-touch-icon.png", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", (e) => {

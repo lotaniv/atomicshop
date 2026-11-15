@@ -538,19 +538,39 @@
       const blob = await R.build(type, b64ToBuf(tpl.b64), data, { base, officer: k.officer || state.settings.name || "" });
       const name = R.fileName(tpl.name, REPORT_FALLBACK[type], base);
       const file = new File([blob], name, { type: R.DOCX_MIME });
-      const url = URL.createObjectURL(blob);
       openSheet(`
         <h3>${REPORT_NAME[type]} מוכן ✓</h3>
         <p class="desc">📄 ${esc(name.replace(/\.docx$/i, ""))}</p>
         <div class="row col">
           <button class="btn primary" data-sact="share-file">${ICON.share} שליחה / שיתוף (וואטסאפ, מייל…)</button>
-          <a class="btn" href="${url}" download="${esc(name)}">שמירה בקבצים</a>
+          <button class="btn" data-sact="save-file">שמירה בקבצים</button>
         </div>`);
       sheet._file = file;
     } catch (e) {
       openSheet(`<h3>לא הצלחתי להפיק את הדוח</h3><p class="desc">${esc(e.message || e)}</p>
         <div class="row"><button class="btn" data-sact="close">סגירה</button><button class="btn primary" data-sact="tpl-open" data-type="${type}">טעינת תבנית מחדש</button></div>`);
     }
+  }
+
+  // שמירת הקובץ: בתוך claude.ai דרך יכולת ההורדה, אחרת הורדה רגילה של הדפדפן
+  async function saveFile() {
+    const file = sheet._file;
+    if (!file) return;
+    let dl = null;
+    if (window.claude && typeof window.claude.use === "function") {
+      try { dl = await window.claude.use("downloads"); } catch (e) { dl = null; }
+    }
+    if (dl) {
+      try { await dl.save({ filename: file.name, data: file }); toast("הקובץ נשמר"); }
+      catch (e) { if (!e || e.code !== "declined") toast("לא ניתן לשמור כאן"); }
+      return;
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(file);
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 
   function openTplSheet(type, thenExport) {
@@ -658,6 +678,14 @@
     sheet.dataset.taskId = id;
   }
 
+  // אישור בתוך האפליקציה (חלון confirm של הדפדפן לא תמיד עובד)
+  let pendingConfirm = null;
+  function askConfirm(text, okLabel, onOk) {
+    pendingConfirm = onOk;
+    openSheet(`<h3>${esc(text)}</h3>
+      <div class="row"><button class="btn" data-sact="close">ביטול</button><button class="btn primary" data-sact="confirm-yes">${esc(okLabel)}</button></div>`);
+  }
+
   function linkOf(rec, t) {
     const def = (SHIFTS[rec.type].tasks || []).find((x) => x.id === t.id);
     return def && def.link ? def.link : null;
@@ -739,8 +767,8 @@
         const type = el.dataset.type;
         if (state.active) {
           if (state.active.type === type) { go("shift"); break; }
-          if (!confirm(`יש משמרת פעילה (${SHIFTS[state.active.type].name}). לסיים אותה ולהתחיל ${SHIFTS[type].name}?`)) break;
-          endShift();
+          askConfirm(`יש משמרת פעילה (${SHIFTS[state.active.type].name}). לסיים אותה ולהתחיל ${SHIFTS[type].name}?`, "סיום והתחלה", () => { endShift(); startShift(type); });
+          break;
         }
         startShift(type);
         break;
@@ -774,10 +802,10 @@
       } break;
       case "fr-note": if (rec) openFridgeNote(rec, el.dataset.k, el.dataset.pool === "1"); break;
       case "delete":
-        if (rec && confirm("למחוק את המשמרת מההיסטוריה?")) {
+        if (rec) askConfirm("למחוק את המשמרת מההיסטוריה?", "מחיקה", () => {
           state.history = state.history.filter((r) => r.id !== rec.id);
           save(); go("history");
-        }
+        });
         break;
     }
   });
@@ -816,6 +844,8 @@
         }
         break;
       }
+      case "save-file": saveFile(); break;
+      case "confirm-yes": { const fn = pendingConfirm; pendingConfirm = null; closeSheet(true); if (fn) fn(); else render(); break; }
       case "settings-save": state.settings.name = sheet.querySelector("#set-name").value.trim(); save(); closeSheet(); toast("נשמר"); break;
       case "ck-st": {
         sheet.dataset.status = el.dataset.st;
